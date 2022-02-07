@@ -8,7 +8,7 @@
 
     <div v-if="!hidden" @click="hide">
         <div class="flex flex-col place-items-center p-6 border-4 border-gray-900 border-opacity-30 w-full hover:border-opacity-60" v-if="titles !== null && titles.length > 0">
-            <div class="flex flex-col gap-9 m-2 p-2 text-center place-items-center border-b-2 border-t-2 pt-6 border-black border-opacity-50" v-for="title in titles" v-bind:key="title.id">
+            <div class="flex flex-col gap-9 m-2 p-2 text-center place-items-center border-b-2 border-t-2 pt-6 border-black border-opacity-50" v-for="title in titles" :key="title.id">
                 <a class="text-center text-2xl font-serif border-4 pt-4 pb-2 pl-4 pr-2 border-blue-300 rounded-b-lg" :href="title.url" >{{title.header}}</a>
                 <img class="w-2/4 border-4 border-blue-300 rounded-md" :src="title.img">
             </div>
@@ -34,26 +34,20 @@ export default {
 
     props: {
         name: String,
-        titlesPromise: Promise
+        getTitles: Promise
     },
 
     methods: {
         hide() {
             this.hidden = !this.hidden;
 
-            if (this.titles === null) {
-                this.finishTitlesPromise()
+            if (this.hidden) {
+                this.titles = null;
+            } else {
+                this.getTitles.then(titles => this.titles = titles)
             }
         },
-
-        finishTitlesPromise() {
-            this.titlesPromise
-            .then(res => res.json())
-            .then(titles => this.titles = titles)
-
-            this.hidden = false;
-        }
-    }
+    },
 }
 </script>
 

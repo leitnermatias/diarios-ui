@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-full flex flex-col">
     <div class="flex flex-row gap-9 bg-gray-200 font-light text-gray-900 px-10 py-2 justify-center">
       <router-link class="nav-item" to="/">Inicio</router-link>
       <router-link class="nav-item" to="/titles">Titulos</router-link>
