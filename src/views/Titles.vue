@@ -6,13 +6,18 @@
     <!-- Filter -->
     <div v-if="showFilter" class="flex flex-row justify-center shadow-md flex-wrap gap-2 w-11/12 p-4 bg-blue-200 bg-opacity-50 border-4 border-blue-200">
         <div class="flex flex-row w-full mb-10 gap-4">
-            <div class="">
+
+            <div class="flex flex-col gap-1 p-2 bg-blue-700 bg-opacity-30 shadow-md rounded-md border-4 border-blue-200 border-opacity-50">
                 <label for="newspaper">Nombre del diario</label><br>
-                <input type="text" name="newspaper" v-model="filter.newspaper">
+                <select class="bg-white text-md rounded-md" name="newspaper" v-model="filter.newspaper">
+                    <option value="">Seleccionar</option>
+                    <option v-for="newspaper in newspapers" :key="newspaper.id" :value="newspaper.name">{{formatNewspaperName(newspaper.name)}}</option>
+                </select>
             </div>
-            <div>
-                <label for="header">Nombre de la noticia</label><br>
-                <input type="text" name="header" v-model="filter.header">
+
+            <div class="flex flex-col gap-1 p-2 bg-blue-700 bg-opacity-30 shadow-md rounded-md border-4 border-blue-200 border-opacity-50">
+                <label for="header">Titulo de la noticia</label><br>
+                <input class="focus:outline-none px-2 rounded-md text-sm w-full h-full" type="text" name="header" v-model="filter.header">
             </div>
         </div>
         <button class="border-2 border-blue-400 w-1/5 bg-blue-300 hover:border-opacity-50 rounded-md hover:bg-opacity-50" @click="search">Buscar</button>
@@ -21,10 +26,14 @@
 
     <!-- Grid -->
     <div v-if="titles.length > 0" class="w-11/12 flex flex-col gap-1 shadow-2xl border-4 border-gray-300 p-2 bg-gray-600 bg-opacity-5">
-        <div class="w-full h-80 flex flex-row shadow-xl text-center border-2 border-gray-900 border-opacity-30 max-h-40 opacity-90 hover:opacity-100" v-for="title in titles" :key="title.id">
-            <img class="h-full w-80 border-gray-700 border-r-2 border-opacity-20" :src="title.img">
-            <span class="w-40 h-12 text-sm">{{formatNewspaperName(title.newspaper.name)}}</span>
-            <a class="flex flex-row w-full h-full gap-9 p-4 text-xl" :href="title.url">
+        <div class="w-full h-80 flex flex-row items-center shadow-xl text-center border-2 border-gray-900 border-opacity-30 max-h-40 opacity-90 hover:opacity-100" v-for="title in titles" :key="title.id">
+            <img class="h-full w-96 border-blue-700 border-2 border-opacity-25 min-w-0 rounded-sm" :src="title.img">
+            <div class="flex flex-col w-40 h-full text-sm bg-blue-600 bg-opacity-20 border-l-2 border-r-2 border-gray-900 rounded-sm p-2">
+                <span class="text-gray-900 font-serif">
+                    {{formatNewspaperName(title.newspaper.name)}}
+                </span>
+            </div>
+            <a class="w-full h-full gap-9 text-xl font-bold border-l-2 border-gray-50" :href="title.url">
                 {{title.header}}
             </a>
           
@@ -47,6 +56,7 @@ export default {
             loading: false,
             showFilter: true,
             titles: [],
+            newspapers: [],
             filter: {
                 newspaper: "",
                 header: ""
@@ -63,6 +73,14 @@ export default {
             .then(data => this.titles = data.result)
             .catch(error => console.log(error))
             this.loading = false;
+        },
+
+        getNewspapers() {
+            fetch(`${process.env.API_URL}/newspapers`)
+            .then(res => res.json())
+            .catch(error => console.log(error))
+            .then(data => this.newspapers = data)
+            .catch(error => console.log(error))
         },
 
         formatNewspaperName(name) {
@@ -84,23 +102,10 @@ export default {
     },
 
     mounted() {
+        this.getNewspapers()
         this.search()
     }
 
 
 }
 </script>
-
-<style>
-    input {
-        padding-left: 10px;
-        padding-bottom: 5px;
-        border: 1px solid gray;
-        text-align: left;
-        line-height: 2;
-    }
-
-    input:focus {
-        outline:none
-    }
-</style>
