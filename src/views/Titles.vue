@@ -27,14 +27,14 @@
     <!-- Grid -->
     <div v-if="titles.length > 0" class="w-11/12 flex flex-col gap-1 shadow-2xl border-4 border-gray-300 p-2 bg-blue-300 bg-opacity-15">
         <span v-if="titlesCount !== null" class="text-xl text-blue-900 text-opacity-15 mb-4 border-b-4 border-blue-900 border-opacity-10 text-center">Cantidad de noticias encontradas: {{titlesCount}}</span>
-        <div class="w-full h-80 flex flex-row items-center shadow-xl text-center border-2 border-gray-900 border-opacity-30 max-h-40 opacity-90 hover:opacity-100" v-for="title in titles" :key="title.id">
+        <div class="w-full h-80 flex flex-row items-center shadow-3xl text-center border-2 border-gray-900 border-opacity-30 max-h-40 opacity-90 hover:opacity-100" v-for="title in titles" :key="title.id">
             <img class="h-full w-96 border-blue-700 border-2 border-opacity-25 min-w-0 rounded-sm" :src="title.img">
-            <div class="flex flex-col w-40 h-full text-sm bg-blue-600 bg-opacity-20 border-l-2 border-r-2 border-gray-900 rounded-sm p-2">
+            <div class="flex flex-col w-40 h-full text-sm bg-blue-50 bg-opacity-5 border-l-2 border-r-2 border-gray-900 rounded-sm p-2 shadow-inner">
                 <span class="text-gray-900 font-serif">
                     {{formatNewspaperName(title.newspaper.name)}}
                 </span>
             </div>
-            <a class="w-full h-full gap-9 text-xl font-bold border-l-2 border-gray-50" :href="title.url">
+            <a class="w-full h-full bg-white gap-9 text-xl font-bold border-l-2 border-blue-500 shadow-inner" :href="title.url">
                 {{title.header}}
             </a>
           
@@ -108,7 +108,9 @@ export default {
         this.search()
 
         window.setInterval(() => {
-            this.search()
+            if (!this.loading) {
+                this.search()
+            }
         }, 5000)
     }
 
