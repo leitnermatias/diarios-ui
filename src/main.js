@@ -9,7 +9,21 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    apiUrl: process.env.API_URL
+    notifications: [],
+  },
+
+  mutations: {
+    addNotification(state, notification) {
+      state.notifications.push(notification);
+    },
+
+    clearNotifications(state) {
+      state.notifications = [];
+    },
+
+    clearNotification(state, notification) {
+      state.notifications = state.notifications.filter(n => n !== notification);
+    }
   }
 })
 
